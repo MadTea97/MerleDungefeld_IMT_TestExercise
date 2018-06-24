@@ -9,12 +9,12 @@ public class Mine : Station
     //Gold currently held in mine
     private float mGold;
 
-    private float mMuiltiplier = .5f;
+    private float mMuiltiplier = 1.5f;
     private int mNextAddition = 10;
 
 
     private int mMineId;
-
+    //Sets gold per miner, depends on level and id
     public int MineId
     {
         get
@@ -46,10 +46,15 @@ public class Mine : Station
     public override void WorkerDone()
     {
         Gold += mGoldPerMiner;
+        Debug.Log(Gold + " Gold in mine");
     }
     public override void UpgradeStation()
     {
+        base.UpgradeStation();
+
         Level += 1;
+
+        Debug.Log("Level: " + Level);
 
         mMuiltiplier += .2f;
         mGoldPerMiner = (mMuiltiplier * Level) + mMuiltiplier * MineId;

@@ -9,7 +9,6 @@ public class Elevator : Station
 
     private float mLoadedGold;
     private bool mGoingDown;
-    private float mTimeForToCollect = 2.0f;
 
     public float TotalGoldInStation
     {
@@ -24,6 +23,19 @@ public class Elevator : Station
         }
     }
 
+    public float LoadedGold
+    {
+        get
+        {
+            return mLoadedGold;
+        }
+
+        set
+        {
+            mLoadedGold = value;
+        }
+    }
+
     //Collect all the gold
     private void Collect()
     {
@@ -32,19 +44,19 @@ public class Elevator : Station
         foreach(Mine mine in ObjectManager.Instance.Mines)
         {
             //check if limit is reached
-            if(mLoadedGold> mLimit)
+            if(LoadedGold > mLimit)
             {
-                mLoadedGold = mLimit;
+                LoadedGold = mLimit;
                 break;
             }
 
-            mLoadedGold += mine.Gold;
+            LoadedGold += mine.Gold;
             mine.Gold = 0;
         }
-        TotalGoldInStation += mLoadedGold;
-        mLoadedGold = 0;
+        TotalGoldInStation += LoadedGold;
+        Debug.Log("Collected Gold " + LoadedGold);
+        LoadedGold = 0;
 
-        Debug.Log("Collected Gold " + mLoadedGold);
 
     }
     public override void WorkerDone()
@@ -53,6 +65,9 @@ public class Elevator : Station
     }
     public override void UpgradeStation()
     {
+
+        base.UpgradeStation();
+
         Level += 1;
 
         WorkerList[0].TimeForCompletion -= .005f;

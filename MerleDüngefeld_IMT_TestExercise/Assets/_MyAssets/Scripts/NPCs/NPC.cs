@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class NPC : MonoBehaviour
+public class NPC : MonoBehaviour//, IPointerClickHandler
 {
     private Station mAssignedStation;
 
@@ -17,5 +18,13 @@ public class NPC : MonoBehaviour
         {
             mAssignedStation = value;
         }
+    }
+    private void OnMouseDown()
+    {
+        OnClick();
+    }
+    public virtual void OnClick()
+    {
+        
     }
 }

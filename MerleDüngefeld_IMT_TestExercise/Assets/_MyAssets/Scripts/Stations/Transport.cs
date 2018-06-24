@@ -9,12 +9,25 @@ public class Transport : Station
 
     private int mNextAddition = 10;
 
+    public float TransportedGold
+    {
+        get
+        {
+            return mTransportedGold;
+        }
+
+        set
+        {
+            mTransportedGold = value;
+        }
+    }
+
     private void TransportGold()
     { 
-        mTransportedGold = ObjectManager.Instance.Elevator.TotalGoldInStation;
-        if (mTransportedGold > mLimit)
+        TransportedGold = ObjectManager.Instance.Elevator.TotalGoldInStation;
+        if (TransportedGold > mLimit)
         {
-            mTransportedGold = mLimit;
+            TransportedGold = mLimit;
             ObjectManager.Instance.Elevator.TotalGoldInStation = ObjectManager.Instance.Elevator.TotalGoldInStation - mLimit;
         }
         else
@@ -23,11 +36,15 @@ public class Transport : Station
     }
     public override void WorkerDone()
     {
-        GameMaster.Instance.PlayerGold = mTransportedGold;
-        mTransportedGold = 0;
+        TransportGold();
+        Debug.Log("Transport done");
+        GameMaster.Instance.PlayerGold += TransportedGold;
+        TransportedGold = 0;
     }
     public override void UpgradeStation()
     {
+        base.UpgradeStation();
+
         Level += 1;
 
         foreach (Worker transporter in WorkerList)

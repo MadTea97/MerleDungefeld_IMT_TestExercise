@@ -83,21 +83,19 @@ public class Station : MonoBehaviour
 
     public virtual void Awake()
     {
-        mWorkerList = new List<NPC>();
-        Loader.Instance.LoadWorker(this);
+        mWorkerList = new List<Worker>();
     }
     //Adds a manager to a station and starts an automated work progress
-    public void AddManagerToStation()
-    {
-        foreach(Worker worker in mWorkerList)
-        {
-            worker.Work(true);
-        }
-        Loader.Instance.LoadManager(this);
-    }
     public virtual void UpgradeStation()
     {
+        float costToUpgrade;
 
+        costToUpgrade = Level * 10;
+
+        if (GameMaster.Instance.PlayerGold < costToUpgrade)
+            return;
+
+        GameMaster.Instance.PlayerGold -= costToUpgrade;
     }
     public virtual void ApplyBoost()
     {
@@ -110,5 +108,35 @@ public class Station : MonoBehaviour
     public virtual void WorkerDone()
     {
 
+    }
+    //Adds a manager to a station and starts an automated work progress
+    public void AddManager()
+    {
+        float neededGold = 10.0f;
+
+        //calculate price for manager
+        //check if the station is a mine
+        if(this is Mine)
+        {
+            if (ObjectManager.Instance.Mines.Contains((Mine)this))
+                neededGold = 10 * ObjectManager.Instance.Mines.IndexOf((Mine)this) +1;
+        }
+        if (mManager != null || GameMaster.Instance.PlayerGold < neededGold)
+        {
+            Debug.Log("manager already added or not enough money");
+            return;
+        }
+        //subtract money from player
+        GameMaster.Instance.PlayerGold -= neededGold;
+
+        //check if player has enough gold for a manager
+        Debug.Log("Manager added to " + gameObject.name);
+        Loader.Instance.LoadManager(this);
+
+        //start working automatically
+        foreach(Worker worker in WorkerList)
+        {
+            worker.Work(true);
+        }
     }
 }

@@ -23,9 +23,17 @@ public class GameMaster : Singleton<GameMaster>
     private void Awake()
     {
         Instance = this;
+        
+    }
+    private void Start()
+    {
+        LoadGame();
     }
     public void LoadGame()
     {
-
+        //Load all stations
+        Loader.Instance.LoadElevator();
+        Loader.Instance.LoadTransport();
+        Loader.Instance.LoadNewMine();
     }
 }
